@@ -1,3 +1,7 @@
 .*.swp
+CA.crt
+CA.key
+crlnumber
+serial
 index
 certs

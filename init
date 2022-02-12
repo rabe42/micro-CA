@@ -11,10 +11,10 @@ echo "01" > crlnumber
 openssl ecparam -out CA.key -name prime256v1 -genkey
 
 # Create the certificate request.
-openssl req -new -sha256 -key CA.key -out CA.csr
+openssl req -new -key CA.key -out CA.csr
 
 # Create the self signed certificate.
-openssl x509 -req -sha256 -days 365 -in CA.csr -signkey CA.key -out CA.crt
+openssl x509 -req -in CA.csr -signkey CA.key -out CA.crt
 
 # Delete the certificate request file, not needed anymore.
 rm CA.csr
