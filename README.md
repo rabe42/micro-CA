@@ -12,7 +12,8 @@ The root directory contains the configuration file for the CA in the `CA.conf` f
 Script Name         | Description
 --------------------|---------------------------------------
 `init`              | Creates all files neccessary for a CA
-`sign-server-crt`  | Creates a certificate and private key which might be used by a service. (DNS required)
+`examine-csr`       | Output the content of the CSR to stdout for examination.
+`sign-server-crt`   | Creates a certificate and private key which might be used by a service. (DNS required)
 `sign-client-crt`   | Creates a certificate and private key which might be used by a client and or user.
 `validate`          | Checks, if the certficate is valid and issued by this CA.
 `revoke-crt`        | Revokes the certificate by adding it to the CRL.

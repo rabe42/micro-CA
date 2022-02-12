@@ -1,0 +1,9 @@
+#!/bin/sh
+## Allows to examine a certification signing request.
+
+if [ -z "$1" ]; then
+    >&2 echo "Please provide the name of a CSR file."
+    exit 2
+fi
+
+openssl req -verify -in "$1" -text -noout
