@@ -3,17 +3,23 @@
 ## a private certificate and an certification signing request both in PEM
 ## format
 
+usage () {
+    >&2 echo "usage:"
+    >&2 echo "$0 <key-name> <C> <ST> <L> <O> <OU> <CN> <mail>"
+    exit 1
+}
+
 if [ ! -f CA/key.pem ]; then
     >&2 echo "The CA is not initialized!"
     exit 1
 fi
 
 if [ -z "$1" ]; then
-    >&2 echo "Please provide a name for the key and CSR."
+    usage
     exit 2
 fi
 
 openssl genrsa -aes256 -out "$1.key.pem" 4096
 echo "RSA key '$1.key.pem' created."
-openssl req -new -sha256 -key "$1.key.pem" -out "$1.csr.pem"
+openssl req -new -sha256 -subj "/C=$2/ST=$3/L=$4/O=$5/OU=$6/CN=$7/emailAddress=$8" -key "$1.key.pem" -out "$1.csr.pem"
 echo "CSR '$1.csr.pem' created."
