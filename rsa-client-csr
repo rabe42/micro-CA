@@ -13,7 +13,7 @@ if [ -z "$1" ]; then
     exit 2
 fi
 
-openssl genrsa -aes256 -out $1.key.pem 4096
-echo "RSA key $1.key.pem created."
-openssl req -new -sha256 -key $1.key.pem -out $1.csr.pem
-echo "CSR $1.csr.pem created."
+openssl genrsa -aes256 -out "$1.key.pem" 4096
+echo "RSA key '$1.key.pem' created."
+openssl req -new -sha256 -key "$1.key.pem" -out "$1.csr.pem"
+echo "CSR '$1.csr.pem' created."
