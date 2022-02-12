@@ -1,0 +1,19 @@
+#!/bin/sh
+## Takes one parameter for the name of the certificate and creates 
+## a private certificate and an certification signing request both in PEM
+## format
+
+if [ ! -f CA/key.pem ]; then
+    >&2 echo "The CA is not initialized!"
+    exit 1
+fi
+
+if [ -z "$1" ]; then
+    >&2 echo "Please provide a name for the key and CSR."
+    exit 2
+fi
+
+openssl genrsa -aes256 -out $1.key.pem 4096
+echo "RSA key $1.key.pem created."
+openssl req -new -sha256 -key $1.key.pem -out $1.csr.pem
+echo "CSR $1.csr.pem created."

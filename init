@@ -5,7 +5,7 @@
 export CADIR="./CA"
 
 if [ -f $CADIR/key.pem ]; then
-    echo "The CA is already initialized!"
+    >&2 echo "The CA is already initialized!"
     exit 1
 fi
 
