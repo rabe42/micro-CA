@@ -22,4 +22,3 @@ rm CA.csr.pem
 
 # Create the initial empty CRL
 openssl ca -config CA.conf -gencrl -out CA.crl.pem
-#openssl ca -config CA.conf -gencrl -keyfile CA.key.pem -cert CA.crt.pem -out CA.crl.pem
