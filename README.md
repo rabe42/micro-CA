@@ -10,8 +10,8 @@ The root directory contains the configuration file for the CA in the `CA.conf` f
 script name        | description
 -------------------|---------------------------------------
 init               | Creates all files neccessary for a CA
-create-service-crt | Creates a certificate which might be used by a service. (DNS required)
-create-client-crt  | Creates a certificate which might be used by a client and or user.
+create-service-crt | Creates a certificate and private key which might be used by a service. (DNS required)
+create-client-crt  | Creates a certificate and private key which might be used by a client and or user.
 validate           | Checks, if the certficate is valid and issued by this CA.
 
 ## Commands
