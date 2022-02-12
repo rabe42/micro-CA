@@ -1,7 +1,10 @@
 .*.swp
-CA.crt
-CA.key
+CA.crt.pem
+CA.key.pem
+CA.crl.pem
+crlnumber.old
 crlnumber
 serial
 index
+index.attr
 certs
