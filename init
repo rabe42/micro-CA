@@ -1,0 +1,20 @@
+#!/bin/sh
+## Creates the skeleton of the CA and the private key and the self signed 
+## certificate of the CA.
+
+mkdir certs
+touch index
+echo "01" > serial
+echo "01" > crlnumber
+
+# Create the private key of the CA.
+openssl ecparam -out CA.key -name prime256v1 -genkey
+
+# Create the certificate request.
+openssl req -new -sha256 -key CA.key -out CA.csr
+
+# Create the self signed certificate.
+openssl x509 -req -sha256 -days 365 -in CA.csr -signkey CA.key -out CA.crt
+
+# Delete the certificate request file, not needed anymore.
+rm CA.csr
