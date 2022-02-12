@@ -2,6 +2,11 @@
 ## Creates the skeleton of the CA and the private key and the self signed 
 ## certificate of the CA.
 
+if [ -f CA.key.pem ]; then
+    echo "The CA is already initialized!"
+    exit 1
+fi
+
 mkdir certs
 touch index
 touch index.attr
