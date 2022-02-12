@@ -1,8 +1,9 @@
 #!/bin/sh
 ## Removes all files and directory created during the init.
-rm -f CA.crt
-rm -f CA.key
+rm -f CA.crt.pem
+rm -f CA.key.pem
 rm -f index
+rm -f index.attr
 rm -f crlnumber
 rm -f serial
 rm -rf certs

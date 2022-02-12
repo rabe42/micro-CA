@@ -4,17 +4,22 @@
 
 mkdir certs
 touch index
+touch index.attr
 echo "01" > serial
 echo "01" > crlnumber
 
 # Create the private key of the CA.
-openssl ecparam -out CA.key -name prime256v1 -genkey
+openssl ecparam -out CA.key.pem -name prime256v1 -genkey
 
 # Create the certificate request.
-openssl req -new -key CA.key -out CA.csr
+openssl req -new -sha256 -key CA.key.pem -out CA.csr.pem
 
 # Create the self signed certificate.
-openssl x509 -req -in CA.csr -signkey CA.key -out CA.crt
+openssl x509 -req -sha256 -in CA.csr.pem -signkey CA.key.pem -out CA.crt.pem
 
 # Delete the certificate request file, not needed anymore.
-rm CA.csr
+rm CA.csr.pem
+
+# Create the initial empty CRL
+openssl ca -config CA.conf -gencrl -out CA.crl.pem
+#openssl ca -config CA.conf -gencrl -keyfile CA.key.pem -cert CA.crt.pem -out CA.crl.pem
