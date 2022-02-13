@@ -1,15 +1,30 @@
-#!/bin/sh
+#!/bin/bash
 ## Takes one parameter for the name of the certificate and creates 
 ## a private certificate and an certification signing request both in PEM
 ## format
 
-# Read the default from the CSR default configuration file
-source csr-default.conf
-
 usage () {
     >&2 echo "usage:"
-    >&2 echo "$0 <key-name> <C> <ST> <L> <O> <OU> <CN> <mail>"
+    >&2 echo "\t$0 <key-name> <C> <ST> <L> <O> <OU> <CN> <mail>"
+    >&2 echo "or"
+    >&2 echo "\t$0 <key-name> <config-file> <CN> <mail>"
+    >&2 echo "with:"
+    >&2 echo "<key-name>\t\tThe name of the key to be created."
+    >&2 echo "<config-file>\t\tA configuration file which must exists, which defines <C> <ST> <L> <O> <OU>"
+    >&2 echo "<C>\t\t\tThe two letter country code where the client is located."
+    >&2 echo "<ST>\t\t\tThe state where the client is located."
+    >&2 echo "<L>\t\t\tThe locality, where the client is located."
+    >&2 echo "<O>\t\t\tThe organisation, where the client belongs to."
+    >&2 echo "<OU>\t\t\tThe organisation unit the client belongs to."
+    >&2 echo "<CN>\t\t\tThe common name to identify the client e.g. personal id."
+    >&2 echo "<mail>\t\t\tThe e-mail address of the client."
     exit 1
+}
+
+debug () {
+    now=$(date +"%T")
+    echo "[$now] Key: $KEY_FILE | CSR: $CSR_FILE"
+    echo "[$now] /C=$CSR_C/ST=$CSR_ST/L=$CSR_L/O=$CSR_O/OU=$CSR_OU/CN=$CSR_CN/emailAddress=$CSR_MAIL"
 }
 
 if [ ! -f CA/key.pem ]; then
@@ -17,29 +32,50 @@ if [ ! -f CA/key.pem ]; then
     exit 1
 fi
 
+# Check if a name was provided.
 if [ -z "$1" ]; then
     usage
     exit 2
 fi
 
-export KEY_FILE="./$1.key.pem"
-export CSR_FILE="./$1.csr.pem"
+# Declare the variables, if config file was provided, read it from there.
+if [ -f "$2" ]; then
+    source $2
+    CSR_CN="$3"
+    CSR_MAIL="$4"
+else
+    CSR_C="$2"
+    CSR_ST="$3"
+    CSR_L="$4"
+    CSR_O="$5"
+    CSR_OU="$6"
+    CSR_CN="$7"
+    CSR_MAIL="$8"
+fi
 
-# Create the private key
+KEY_FILE="./$1.key.pem"
+CSR_FILE="./$1.csr.pem"
+
+debug
+
+# Create the private key, which is stored AES256 encrypted.
 openssl genrsa -aes256 -out "$KEY_FILE" 
 
 retVal=$?
 if [ $retVal -eq 0 ]; then
-    echo "RSA key '$KEY_FILE' created."
+    now=$(date +"%T")
+    echo "[$now] RSA key '$KEY_FILE' created."
 fi
 
 # Create the CSR, using the just created private key
 openssl req -new -sha256 \
-    -subj "/C=$2/ST=$3/L=$4/O=$5/OU=$6/CN=$7/emailAddress=$8" \
-    -addext "subjectAltName = DNS:test.de" \
+    -subj "/C=$CSR_C/ST=$CSR_ST/L=$CSR_L/O=$CSR_O/OU=$CSR_OU/CN=$CSR_CN/emailAddress=$CSR_MAIL" \
     -key "$KEY_FILE" -out "$CSR_FILE"
+
+#    -addext "subjectAltName = DNS:$7" \
 
 retVal=$?
 if [ $retVal -eq 0 ]; then
-    echo "CSR '$1.csr.pem' created."
+    now=$(date +"%T")
+    echo "[$now] CSR '$1.csr.pem' created."
 fi
