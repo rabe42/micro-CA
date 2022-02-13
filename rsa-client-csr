@@ -3,6 +3,9 @@
 ## a private certificate and an certification signing request both in PEM
 ## format
 
+# Read the default from the CSR default configuration file
+source csr-default.conf
+
 usage () {
     >&2 echo "usage:"
     >&2 echo "$0 <key-name> <C> <ST> <L> <O> <OU> <CN> <mail>"

@@ -1,0 +1,21 @@
+#!/bin/sh
+## Takes the certificate request and outputs the most significant information.
+## If the user confirms, the certificate will be created and signed.
+
+usage () {
+    >&2 echo "usage:"
+    >&2 echo "$0 <key-name> <C> <ST> <L> <O> <OU> <CN> <mail>"
+    exit 1
+}
+
+if [ ! -f CA/key.pem ]; then
+    >&2 echo "The CA is not initialized!"
+    exit 1
+fi
+
+if [ -z "$1" ]; then
+    usage
+    exit 2
+fi
+
+openssl x509 -req -CAcreateserial -CA CA/crt.pem -CAkey CA/key.pem -in $1.csr.pem -out $1.crt.pem
