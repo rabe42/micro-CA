@@ -62,7 +62,7 @@ CSR_FILE="./$1.csr.pem"
 debug
 
 # Create the private key, which is stored AES256 encrypted.
-openssl genrsa -aes256 -out "$KEY_FILE" 
+openssl genrsa -aes256 -out "$KEY_FILE" 4096
 
 retVal=$?
 if [ $retVal -eq 0 ]; then
