@@ -22,7 +22,24 @@ if [ -z "$1" ]; then
     exit 2
 fi
 
-openssl genrsa -aes256 -out "$1.key.pem" 4096
-echo "RSA key '$1.key.pem' created."
-openssl req -new -sha256 -subj "/C=$2/ST=$3/L=$4/O=$5/OU=$6/CN=$7/emailAddress=$8" -key "$1.key.pem" -out "$1.csr.pem"
-echo "CSR '$1.csr.pem' created."
+export KEY_FILE="./$1.key.pem"
+export CSR_FILE="./$1.csr.pem"
+
+# Create the private key
+openssl genrsa -aes256 -out "$KEY_FILE" 
+
+retVal=$?
+if [ $retVal -eq 0 ]; then
+    echo "RSA key '$KEY_FILE' created."
+fi
+
+# Create the CSR, using the just created private key
+openssl req -new -sha256 \
+    -subj "/C=$2/ST=$3/L=$4/O=$5/OU=$6/CN=$7/emailAddress=$8" \
+    -addext "subjectAltName = DNS:test.de" \
+    -key "$KEY_FILE" -out "$CSR_FILE"
+
+retVal=$?
+if [ $retVal -eq 0 ]; then
+    echo "CSR '$1.csr.pem' created."
+fi
