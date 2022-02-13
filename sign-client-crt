@@ -15,19 +15,22 @@ debug () {
     echo "[$now] CSR_FILE='$CSR_FILE' CRT_FILE='$CRT_FILE'"
 }
 
+# Check, if the CA is initialized.
 if [ ! -f CA/key.pem ]; then
     >&2 echo "The CA is not initialized!"
     exit 1
 fi
 
+# Check, if the mandatory parameter is provided.
 if [ -z "$1" ]; then
     usage
     exit 2
 fi
 
+# Check if the parameter is a file or just a part of a file.
 if [ -f "$1" ]; then
     CSR_FILE="$1"
-    # Split at the dots and use the first part as the name
+    # Split at the dots and use the first part as the name.
     array=(${CSR_FILE//./ })
     CRT_FILE="${array[0]}.crt.pem"
 else
@@ -35,8 +38,10 @@ else
     CRT_FILE="$1.crt.pem"
 fi
 
+# Create the certificate.
 openssl x509 -req -CAcreateserial -CA CA/crt.pem -CAkey CA/key.pem -in $CSR_FILE -out $CRT_FILE
 
+# Check the result of this.
 now=$(date +"%T")
 retVal=$?
 if [ $retVal -eq 0 ]; then
