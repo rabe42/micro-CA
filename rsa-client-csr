@@ -5,19 +5,19 @@
 
 usage () {
     >&2 echo "usage:"
-    >&2 echo "\t$0 <key-name> <C> <ST> <L> <O> <OU> <CN> <mail>"
+    >&2 echo "      $0 <key-name> <C> <ST> <L> <O> <OU> <CN> <mail>"
     >&2 echo "or"
-    >&2 echo "\t$0 <key-name> <config-file> <CN> <mail>"
+    >&2 echo "      $0 <key-name> <config-file> <CN> <mail>"
     >&2 echo "with:"
-    >&2 echo "<key-name>\t\tThe name of the key to be created."
-    >&2 echo "<config-file>\t\tA configuration file which must exists, which defines <C> <ST> <L> <O> <OU>"
-    >&2 echo "<C>\t\t\tThe two letter country code where the client is located."
-    >&2 echo "<ST>\t\t\tThe state where the client is located."
-    >&2 echo "<L>\t\t\tThe locality, where the client is located."
-    >&2 echo "<O>\t\t\tThe organisation, where the client belongs to."
-    >&2 echo "<OU>\t\t\tThe organisation unit the client belongs to."
-    >&2 echo "<CN>\t\t\tThe common name to identify the client e.g. personal id."
-    >&2 echo "<mail>\t\t\tThe e-mail address of the client."
+    >&2 echo "  <key-name>        The name of the key to be created."
+    >&2 echo "  <config-file>     A configuration file which must exists, which defines <C> <ST> <L> <O> <OU>"
+    >&2 echo "  <C>               The two letter country code where the client is located."
+    >&2 echo "  <ST>              The state where the client is located."
+    >&2 echo "  <L>               The locality, where the client is located."
+    >&2 echo "  <O>               The organisation, where the client belongs to."
+    >&2 echo "  <OU>              The organisation unit the client belongs to."
+    >&2 echo "  <CN>              The common name to identify the client e.g. personal id."
+    >&2 echo "  <mail>            The e-mail address of the client."
     exit 1
 }
 
