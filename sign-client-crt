@@ -1,11 +1,18 @@
-#!/bin/sh
+#!/bin/bash
 ## Takes the certificate request and outputs the most significant information.
 ## If the user confirms, the certificate will be created and signed.
 
 usage () {
-    >&2 echo "usage:"
-    >&2 echo "$0 <key-name> <C> <ST> <L> <O> <OU> <CN> <mail>"
+    >&2 echo "Usage"
+    >&2 echo "      $0 <csr-file>"
+    >&2 echo "where:"
+    >&2 echo "  <csr-file>      The name of the certificate request file or just the start of it."
     exit 1
+}
+
+debug () {
+    now=$(date +"%T")
+    echo "[$now] CSR_FILE='$CSR_FILE' CRT_FILE='$CRT_FILE'"
 }
 
 if [ ! -f CA/key.pem ]; then
@@ -18,4 +25,22 @@ if [ -z "$1" ]; then
     exit 2
 fi
 
-openssl x509 -req -CAcreateserial -CA CA/crt.pem -CAkey CA/key.pem -in $1.csr.pem -out $1.crt.pem
+if [ -f "$1" ]; then
+    CSR_FILE="$1"
+    # Split at the first dot and use this as the name
+    array=(${CSR_FILE//./ })
+    CRT_FILE="${array[0]}.crt.pem"
+else
+    CSR_FILE="$1.csr.pem"
+    CRT_FILE="$1.crt.pem"
+fi
+
+openssl x509 -req -CAcreateserial -CA CA/crt.pem -CAkey CA/key.pem -in $CSR_FILE -out $CRT_FILE
+
+now=$(date +"%T")
+retVal=$?
+if [ $retVal -eq 0 ]; then
+    echo "[$now] created new certificate in '$CRT_FILE'."
+else
+    >&2 echo "[$now] Error while creating the certificate!"
+fi
