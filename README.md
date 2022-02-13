@@ -13,8 +13,8 @@ Script Name         | Description
 --------------------|---------------------------------------
 `init`              | Creates all files neccessary for a CA
 `examine-csr`       | Output the content of the CSR to stdout for examination.
-`sign-server-crt`   | Creates a certificate and private key which might be used by a service. (DNS required)
-`sign-client-crt`   | Creates a certificate and private key which might be used by a client and or user.
+`create-server-crt`   | Creates a certificate and private key which might be used by a service. (DNS required)
+`create-client-crt`   | Creates a certificate and private key which might be used by a client and or user.
 `validate`          | Checks, if the certficate is valid and issued by this CA.
 `revoke-crt`        | Revokes the certificate by adding it to the CRL.
 
@@ -41,6 +41,10 @@ Creates a certificate of a client or user. A unique Id for the client should be 
 Checks if the certificate is valid and signed by the CA. Beside the signiture it checks if the provided certificate is not on the CRL and is still in the time period, defined at creation time of the certificate.
 
 ## RSA Commands
+These commands are not really part of the CA, but comes in handy to demonstrate how the clients or users may be provided with an simple way to create there private keys and certificate requests. 
+
+To really leverage on the PKI, it is important, that the users are able to do this step by their own.
+
 ### rsa-client-csr
 Creates a private key and derives a certificate signing request (CSR) from it. This may be signed with the CA signing command.
 
