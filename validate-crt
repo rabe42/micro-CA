@@ -1,0 +1,22 @@
+#!/bin/bash
+## Validates, if the provided certificate is valid in the moment and signed by
+## this CA.
+
+usage () {
+    >&2 echo "Usage:"
+    >&2 echo "      $0 <certificate-file>"
+    >&2 echo "with:"
+    >&2 echo "<certificate-file>    the name of a file, containing a certificate, which must be checked."
+}
+
+if [ -z "$1" ]; then
+    usage
+    exit 1
+fi
+
+if [ ! -f "$1" ]; then
+    >&2 echo "CRT file '$1' does not exist!"
+    exit 1
+fi
+
+openssl verify -verbose -CAfile CA/crt.pem $1
