@@ -1,0 +1,83 @@
+#!/bin/bash
+## Takes one parameter for the name of the certificate and creates 
+## a private certificate and an certification signing request both in PEM
+## format. This uses the provided CN as the domain name of the server.
+
+usage () {
+    >&2 echo "Usage:"
+    >&2 echo "      $0 <key-name> <C> <ST> <L> <O> <OU> <CN> <mail>"
+    >&2 echo "or"
+    >&2 echo "      $0 <key-name> <config-file> <CN> <mail>"
+    >&2 echo "with:"
+    >&2 echo "<key-name>        The name of the key to be created."
+    >&2 echo "<config-file>     A configuration file which must exists, which defines <C> <ST> <L> <O> <OU>"
+    >&2 echo "<C>               The two letter country code where the server is located."
+    >&2 echo "<ST>              The state where the server is located."
+    >&2 echo "<L>               The locality, where the server is located."
+    >&2 echo "<O>               The organisation, where the server belongs to."
+    >&2 echo "<OU>              The organisation unit the server belongs to."
+    >&2 echo "<CN>              The domain name (FQDN) of the server/service."
+    >&2 echo "<mail>            The e-mail address of the admin team."
+    >&2 echo
+    >&2 echo "Beware the <CN> MUST be a FQDN! The CSR generation will fail otherwise!"
+    >&2 echo
+    exit 1
+}
+
+debug () {
+    now=$(date +"%T")
+    echo "[$now] Key: $KEY_FILE | CSR: $CSR_FILE"
+    echo "[$now] /C=$CSR_C/ST=$CSR_ST/L=$CSR_L/O=$CSR_O/OU=$CSR_OU/CN=$CSR_CN/emailAddress=$CSR_MAIL"
+}
+
+if [ ! -f CA/key.pem ]; then
+    >&2 echo "The CA is not initialized!"
+    exit 1
+fi
+
+# Check if a name was provided.
+if [ -z "$1" ]; then
+    usage
+    exit 2
+fi
+
+# Declare the variables, if config file was provided, read it from there.
+if [ -f "$2" ]; then
+    source $2
+    CSR_CN="$3"
+    CSR_MAIL="$4"
+else
+    CSR_C="$2"
+    CSR_ST="$3"
+    CSR_L="$4"
+    CSR_O="$5"
+    CSR_OU="$6"
+    CSR_CN="$7"
+    CSR_MAIL="$8"
+fi
+
+KEY_FILE="./$1.key.pem"
+CSR_FILE="./$1.csr.pem"
+
+debug
+
+# Create the private key, which is stored AES256 encrypted.
+openssl genrsa -aes256 -out "$KEY_FILE" 
+
+retVal=$?
+if [ $retVal -eq 0 ]; then
+    now=$(date +"%T")
+    echo "[$now] RSA key '$KEY_FILE' created."
+fi
+
+# Create the CSR, using the just created private key
+openssl req -new -sha256 \
+    -subj "/C=$CSR_C/ST=$CSR_ST/L=$CSR_L/O=$CSR_O/OU=$CSR_OU/CN=$CSR_CN/emailAddress=$CSR_MAIL" \
+    -addext "subjectAltName = DNS:$CSR_CN" \
+    -key "$KEY_FILE" -out "$CSR_FILE"
+
+retVal=$?
+if [ $retVal -eq 0 ]; then
+    now=$(date +"%T")
+    echo "[$now] CSR '$1.csr.pem' created."
+fi
