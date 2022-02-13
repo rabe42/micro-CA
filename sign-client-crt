@@ -27,7 +27,7 @@ fi
 
 if [ -f "$1" ]; then
     CSR_FILE="$1"
-    # Split at the first dot and use this as the name
+    # Split at the dots and use the first part as the name
     array=(${CSR_FILE//./ })
     CRT_FILE="${array[0]}.crt.pem"
 else
