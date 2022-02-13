@@ -1,0 +1,21 @@
+#!/bin/bash
+## Allows to examine a certification signing request.
+
+usage () {
+    >&2 echo "Usage"
+    >&2 echo "      $0 <crt-file>"
+    >&2 echo "with:"
+    >&2 echo "  <crt-file> The path to a certificate."
+}
+
+if [ -z "$1" ]; then
+    usage
+    exit 1
+fi
+
+if [ ! -f "$1" ]; then
+    >&2 echo "CRT file '$1' does not exist!"
+    exit 1
+fi
+
+openssl x509 -in "$1" -text -noout
