@@ -2,3 +2,4 @@
 ## Removes all files and directory created during the init.
 rm -rf CA
 rm -rf certs
+rm -f *.pem
