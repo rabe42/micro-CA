@@ -1,9 +1,21 @@
-#!/bin/sh
+#!/bin/bash
 ## Allows to examine a certification signing request.
 
+usage () {
+    >&2 echo "Usage"
+    >&2 echo "      $0 <csr-file>"
+    >&2 echo "with:"
+    >&2 echo "  <csr-file> The path to a certificate request file."
+}
+
 if [ -z "$1" ]; then
-    >&2 echo "Please provide the name of a CSR file."
-    exit 2
+    usage
+    exit 1
+fi
+
+if [ ! -f "$1" ]; then
+    >&2 echo "CSR file '$1' does not exist!"
+    exit 1
 fi
 
 openssl req -verify -in "$1" -text -noout
