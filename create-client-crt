@@ -15,6 +15,19 @@ debug () {
     echo "[$now] CSR_FILE='$CSR_FILE' CRT_FILE='$CRT_FILE'"
 }
 
+create_certificate () {
+    openssl x509 -req -CAcreateserial -CA CA/crt.pem -CAkey CA/key.pem -in $CSR_FILE -out $CRT_FILE
+
+    # ...and Check the resulting certificate.
+    now=$(date +"%T")
+    retVal=$?
+    if [ $retVal -eq 0 ]; then
+        echo "[$now] created new certificate in '$CRT_FILE'."
+    else
+        >&2 echo "[$now] Error while creating the certificate!"
+    fi
+}
+
 # Check, if the CA is initialized.
 if [ ! -f CA/key.pem ]; then
     >&2 echo "The CA is not initialized!"
@@ -38,14 +51,14 @@ else
     CRT_FILE="$1.crt.pem"
 fi
 
-# Create the certificate.
-openssl x509 -req -CAcreateserial -CA CA/crt.pem -CAkey CA/key.pem -in $CSR_FILE -out $CRT_FILE
+# TODO: Display the user attributes of the certificate incl. extensions
+openssl req -verify -in "$CSR_FILE" -text -noout | grep "Subject:"
 
-# Check the result of this.
-now=$(date +"%T")
-retVal=$?
-if [ $retVal -eq 0 ]; then
-    echo "[$now] created new certificate in '$CRT_FILE'."
-else
-    >&2 echo "[$now] Error while creating the certificate!"
-fi
+# Prompt the user, if the content is correct and the certificate should be created.
+echo "Should we create a certificate for this request?"
+select yn in "Yes" "No"; do
+    case $yn in
+        "Yes" ) create_certificate; break;;
+        "No" ) exit 3
+    esac
+done
