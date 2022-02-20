@@ -51,7 +51,7 @@ else
     CRT_FILE="$1.crt.pem"
 fi
 
-# TODO: Display the user attributes of the certificate incl. extensions
+# Display the user attributes of the certificate incl. extensions
 openssl req -verify -in "$CSR_FILE" -text -noout | grep "Subject:"
 
 # Prompt the user, if the content is correct and the certificate should be created.
