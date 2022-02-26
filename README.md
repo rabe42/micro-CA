@@ -2,9 +2,11 @@
 A skeleton repository to setup a private certfication authority (CA) with openssl.
 
 ## Overview
-This repository provides a collection of simple commands to setup a really small private certification authority as the root of a private public key infrastructure. It is not intended to be used in a productive environment, as it provides no protection of the private key of the CA. 
+This repository provides a collection of simple purly open-ssl related commands to setup a small private certification authority as the root of a private public key infrastructure. It is not intended to be used in a productive environment, as it provides no protection of the private key of the CA. 
 
-It can be considered as a good starting point in learning about the role of the role of a CA in an PKI.
+It can be considered as a good starting point in learning about the role of a CA in an PKI. A know-how which is important, in establishing a zero trust environment also in small businesses or even in the private environment.
+
+It is *not* the intention of this module to teach public/private keys and their concepts. There are enough ressources outside available which **should** be read before creating and using a CA.
 
 ## Basic Concepts
 The root directory contains the configuration file for the CA in the `CA.conf` file. In addition the a number of shell scripts are provided:
