@@ -15,6 +15,7 @@ Script Name         | Description
 --------------------|---------------------------------------
 `init`              | Creates all files neccessary for a CA
 `examine-csr`       | Output the content of the CSR to stdout for examination.
+`examine-crt`       | Output the content of a CRT to stdout for examination.
 `create-server-crt`   | Creates a certificate and private key which might be used by a service. (DNS required)
 `create-client-crt`   | Creates a certificate and private key which might be used by a client and or user.
 `validate`          | Checks, if the certficate is valid and issued by this CA.
@@ -52,3 +53,6 @@ Creates a private key and derives a certificate signing request (CSR) from it. T
 
 ### rsa-server-csr
 Creates a private key for a server and derives a signing request (CSR) from it. In contrast to the client certificate, a domain name (FQDN) must be provided in this case. In a TLS context, the client can check, if the domain name of the certificate matches the name of the domain.
+
+## Use Cases
+### Create a new CA

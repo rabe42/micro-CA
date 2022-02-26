@@ -1,0 +1,64 @@
+#!/bin/bash
+## Takes the certificate request and outputs the most significant information.
+## If the user confirms, the certificate will be created and signed.
+
+usage () {
+    >&2 echo "Usage"
+    >&2 echo "      $0 <csr-file>"
+    >&2 echo "where:"
+    >&2 echo "  <csr-file>      The name of the certificate request file or just the start of it."
+    exit 1
+}
+
+debug () {
+    now=$(date +"%T")
+    echo "[$now] CSR_FILE='$CSR_FILE' CRT_FILE='$CRT_FILE'"
+}
+
+create_certificate () {
+    openssl x509 -req -CAcreateserial -CA CA/crt.pem -CAkey CA/key.pem -in $CSR_FILE -out $CRT_FILE
+
+    # ...and Check the resulting certificate.
+    now=$(date +"%T")
+    retVal=$?
+    if [ $retVal -eq 0 ]; then
+        echo "[$now] created new certificate in '$CRT_FILE'."
+    else
+        >&2 echo "[$now] Error while creating the certificate!"
+    fi
+}
+
+# Check, if the CA is initialized.
+if [ ! -f CA/key.pem ]; then
+    >&2 echo "The CA is not initialized!"
+    exit 1
+fi
+
+# Check, if the mandatory parameter is provided.
+if [ -z "$1" ]; then
+    usage
+    exit 2
+fi
+
+# Check if the parameter is a file or just a part of a file.
+if [ -f "$1" ]; then
+    CSR_FILE="$1"
+    # Split at the dots and use the first part as the name.
+    array=(${CSR_FILE//./ })
+    CRT_FILE="${array[0]}.crt.pem"
+else
+    CSR_FILE="$1.csr.pem"
+    CRT_FILE="$1.crt.pem"
+fi
+
+# Display the user attributes of the certificate incl. extensions
+openssl req -verify -in "$CSR_FILE" -text -noout | grep "DNS:"
+
+# Prompt the user, if the content is correct and the certificate should be created.
+echo "Check, if the requester owns the DNS entry! Can we savely create the certificate?"
+select yn in "Yes" "No"; do
+    case $yn in
+        "Yes" ) create_certificate; break;;
+        "No" ) exit 3
+    esac
+done
