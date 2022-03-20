@@ -1,0 +1,4 @@
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+nsCertType=server
+keyUsage=digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
