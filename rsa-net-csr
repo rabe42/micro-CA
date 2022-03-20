@@ -42,11 +42,11 @@ if [ -z "$1" ]; then
 fi
 
 # Declare the variables, if config file was provided, read it from there.
-if [ -f "$2" ]; then
+if [ -f "$2" -a "$#" -eq 4 ]; then
     source $2
     CSR_CN="$3"
     CSR_MAIL="$4"
-else
+elif [ "$#" -eq 8 ]; then
     CSR_C="$2"
     CSR_ST="$3"
     CSR_L="$4"
@@ -54,6 +54,9 @@ else
     CSR_OU="$6"
     CSR_CN="$7"
     CSR_MAIL="$8"
+else
+    >&2 echo "Wrong number of arguments: $#"
+    exit 2
 fi
 
 KEY_FILE="./$1.key.pem"
