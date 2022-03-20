@@ -16,8 +16,8 @@ Script Name         | Description
 `init`              | Creates all files neccessary for a CA
 `examine-csr`       | Output the content of the CSR to stdout for examination.
 `examine-crt`       | Output the content of a CRT to stdout for examination.
-`create-server-crt`   | Creates a certificate and private key which might be used by a service. (DNS required)
-`create-client-crt`   | Creates a certificate and private key which might be used by a client and or user.
+`create-net-crt`   | Creates a certificate and private key which might be used by a service. (DNS required)
+`create-user-crt`   | Creates a certificate and private key which might be used by a client and or user.
 `validate`          | Checks, if the certficate is valid and issued by this CA.
 `revoke-crt`        | Revokes the certificate by adding it to the CRL.
 
@@ -25,8 +25,8 @@ These scripts allow to do the basic operations of a CA. In addition a script to 
 
 Script Name      | Description
 -----------------|---------------------------------------
-`rsa-client-csr` | Creates a private rsa key (4096 bit)  and an certifcate signature request (CSR) for the public key.
-`rsa-server-csr` | Creates a private rsa key (4096 bit) for a server and a certificate request for the public key.
+`rsa-user-csr` | Creates a private rsa key (4096 bit)  and an certifcate signature request (CSR) for the public key.
+`rsa-net-csr` | Creates a private rsa key (4096 bit) for a server and a certificate request for the public key.
 
 ## CA Commands
 ### init
@@ -34,11 +34,11 @@ The init command will initialize the needed files and directories. It also creat
 
 In the same time it creates also an empty certificate revocation list, which should be used during the 
 
-### create-server-crt
+### create-net-crt
 Creates a certificate where minitmum one DNS entry is required. This command takes a certificate request file in PEM format, as a parameter, checks if the domain name and a E-Mail address is provided. The result is a PEM file with the certificate, signed by this CA.
 
-### create-client-crt
-Creates a certificate of a client or user. A unique Id for the client should be provided, which allows the identification of the requestor.
+### create-user-crt
+Creates a certificate of a user. A unique Id for the client should be provided, which allows the identification of the requestor.
 
 ### validate
 Checks if the certificate is valid and signed by the CA. Beside the signiture it checks if the provided certificate is not on the CRL and is still in the time period, defined at creation time of the certificate.
@@ -48,11 +48,11 @@ These commands are not really part of the CA, but comes in handy to demonstrate 
 
 To really leverage on the PKI, it is important, that the users are able to do this step by their own.
 
-### rsa-client-csr
+### rsa-user-csr
 Creates a private key and derives a certificate signing request (CSR) from it. This may be signed with the CA signing command.
 
-### rsa-server-csr
-Creates a private key for a server and derives a signing request (CSR) from it. In contrast to the client certificate, a domain name (FQDN) must be provided in this case. In a TLS context, the client can check, if the domain name of the certificate matches the name of the domain.
+### rsa-net-csr
+Creates a private key for a network and point (workstation or server) and derives a signing request (CSR) from it. In contrast to the client certificate, a domain name (FQDN) must be provided in this case. In a TLS context, the client can check, if the domain name of the certificate matches the name of the domain.
 
 ## Use Cases
 ### Create a new CA
