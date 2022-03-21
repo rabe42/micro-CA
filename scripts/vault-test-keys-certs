@@ -1,0 +1,3 @@
+#!/bin/bash
+# Creates the certificates needed for the secret-trail-vault.
+rsa-net-csr

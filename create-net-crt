@@ -16,6 +16,7 @@ debug () {
 }
 
 create_certificate () {
+    # FIXME: We need here to provide the extensions, used in the CSR.
     openssl x509 -req -CAcreateserial -extfile nep-v3.ext -CA CA/crt.pem -CAkey CA/key.pem -in $CSR_FILE -out $CRT_FILE
 
     # ...and Check the resulting certificate.
