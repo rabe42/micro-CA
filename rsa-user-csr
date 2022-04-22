@@ -70,7 +70,22 @@ fi
 # Create the CSR, using the just created private key
 openssl req -new -sha256 \
     -subj "/C=$CSR_C/ST=$CSR_ST/L=$CSR_L/O=$CSR_O/OU=$CSR_OU/CN=$CSR_CN/emailAddress=$CSR_MAIL" \
-    -key "$KEY_FILE" -out "$CSR_FILE"
+    -key "$KEY_FILE" -out "$CSR_FILE" \
+    -extensions SAN \
+    -config <(cat <<EOF
+[req]
+prompt=no
+distinguished_name=req_distinguished_name
+[req_distinguished_name]
+O=bogo-p384
+[SAN]
+subjectAltName=email:test@test.test
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+nsCertType=client
+keyUsage=digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+EOF
+)
 
 #    -addext "subjectAltName = DNS:$7" \
 
