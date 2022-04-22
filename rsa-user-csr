@@ -56,7 +56,7 @@ fi
 KEY_FILE="./$1.key.pem"
 CSR_FILE="./$1.csr.pem"
 
-debug
+# debug
 
 # Create the private key, which is stored AES256 encrypted.
 openssl genrsa -aes256 -out "$KEY_FILE" 4096
@@ -79,15 +79,12 @@ distinguished_name=req_distinguished_name
 [req_distinguished_name]
 O=bogo-p384
 [SAN]
-subjectAltName=email:test@test.test
+subjectAltName=email:$CSR_MAIL
 authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
-nsCertType=client
 keyUsage=digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 EOF
 )
-
-#    -addext "subjectAltName = DNS:$7" \
 
 retVal=$?
 if [ $retVal -eq 0 ]; then
