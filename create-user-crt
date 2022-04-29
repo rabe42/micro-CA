@@ -16,7 +16,10 @@ debug () {
 }
 
 create_certificate () {
-    openssl x509 -req -CAcreateserial -extfile client-v3.ext -CA CA/crt.pem -CAkey CA/key.pem -in $CSR_FILE -out $CRT_FILE
+    openssl x509 -req -CAcreateserial \
+        -extfile client-v3.ext \
+        -CA CA/crt.pem -CAkey CA/key.pem \
+        -in $CSR_FILE -out $CRT_FILE
 
     # ...and Check the resulting certificate.
     now=$(date +"%T")

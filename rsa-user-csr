@@ -68,6 +68,7 @@ if [ $retVal -eq 0 ]; then
 fi
 
 # Create the CSR, using the just created private key
+# FIXME: The content of the ext config seems to be not part of the CSR!
 openssl req -new -sha256 \
     -subj "/C=$CSR_C/ST=$CSR_ST/L=$CSR_L/O=$CSR_O/OU=$CSR_OU/CN=$CSR_CN/emailAddress=$CSR_MAIL" \
     -key "$KEY_FILE" -out "$CSR_FILE" \
